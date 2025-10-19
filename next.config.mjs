@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
     return [
@@ -10,23 +9,10 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "no-referrer" },
           { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
-          {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "connect-src 'self' https://*.supabase.co",
-              "font-src 'self' https:",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-            ].join("; ")
-          }
+          // ⛔️ ПРИБРАНО CSP на час розробки
         ],
       },
     ];
   },
 };
-
 export default nextConfig;
