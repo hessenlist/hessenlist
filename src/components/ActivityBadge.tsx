@@ -1,21 +1,26 @@
-type Props = { score: number };
+type Props = { score: number | null };
+
+const tones = {
+  high: "bg-emerald-100/70 text-emerald-800 border-emerald-200/70",
+  medium: "bg-amber-100/70 text-amber-800 border-amber-200/70",
+  low: "bg-neutral-100/70 text-neutral-700 border-neutral-200/70",
+};
 
 export default function ActivityBadge({ score }: Props) {
-  const label =
-    score >= 80 ? "Відповідає швидко"
-    : score >= 40 ? "Відповідає повільно"
-    : "Поки без відповіді";
+  if (score === null) return null;
 
-  const cls =
-    score >= 80 ? "bg-green-100 text-green-800"
-    : score >= 40 ? "bg-yellow-100 text-yellow-800"
-    : "bg-gray-100 text-gray-700";
+  let label = "Keine Antwort";
+  let style = tones.low;
+  if (score > 70) {
+    label = "Antwortet schnell";
+    style = tones.high;
+  } else if (score > 40) {
+    label = "Antwortet langsam";
+    style = tones.medium;
+  }
 
   return (
-    <span
-      className={`text-xs px-2 py-1 rounded-full ${cls}`}
-      title={`ActivityIndex: ${score}`}
-    >
+    <span className={`text-xs px-2 py-1 rounded-full border font-medium ${style}`}>
       {label}
     </span>
   );

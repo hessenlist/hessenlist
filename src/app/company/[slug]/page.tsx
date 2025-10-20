@@ -12,29 +12,32 @@ type Company = {
 
 export default async function CompanyPage({ params }: { params: { slug: string } }) {
   const { data, error } = await supabase
-    .from<Company>("companies")
+    .from("companies")
     .select("*")
     .eq("slug", params.slug)
-    .single();
+    .maybeSingle();
 
-  if (error?.code === "PGRST116" || !data) return notFound();
   if (error) return <p className="text-red-600">Fehler: {error.message}</p>;
+  if (!data) return notFound();
 
-  const score = data.activity_index ?? computeActivityIndex(!!data.answered, data.tta_hours, !!data.contactable);
+  const c = data as Company;
+  const score =
+    c.activity_index ??
+    computeActivityIndex(!!c.answered, c.tta_hours, !!c.contactable);
 
   return (
-    <article className="space-y-4">
+    <article className="glass rounded-2xl p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{data.name}</h1>
+        <h1 className="text-2xl font-semibold">{c.name}</h1>
         <ActivityBadge score={score} />
       </div>
-      <p className="text-neutral-500">{data.city ?? "—"}</p>
-      <p className="text-neutral-700">{data.summary_de ?? "Beschreibung folgt."}</p>
+      <p className="text-neutral-700">{c.city ?? "—"}</p>
+      <p className="text-neutral-700 mt-2">{c.summary_de ?? "Beschreibung folgt."}</p>
 
       <div className="mt-4 flex flex-wrap gap-4 text-sm">
-        {data.phone && <a className="underline" href={`tel:${data.phone}`}>Telefon</a>}
-        {data.email && <a className="underline" href={`mailto:${data.email}`}>E-Mail</a>}
-        {data.website && <a className="underline" target="_blank" href={data.website}>Website</a>}
+        {c.phone && <a className="underline" href={`tel:${c.phone}`}>Telefon</a>}
+        {c.email && <a className="underline" href={`mailto:${c.email}`}>E-Mail</a>}
+        {c.website && <a className="underline" target="_blank" href={c.website}>Website</a>}
       </div>
     </article>
   );

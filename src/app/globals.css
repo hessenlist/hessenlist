@@ -1,26 +1,38 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ====== Base ====== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* м’який скляний фон */
+  background: linear-gradient(135deg, #f6f8f9 0%, #e9eef1 60%, #f4f6f8 100%);
+  background-attachment: fixed;
+  @apply text-neutral-900;
+}
+
+/* Типографія */
+h1, h2, h3 {
+  letter-spacing: -0.01em;
+}
+
+/* Лінки */
+a {
+  transition: color .2s ease, opacity .2s ease, box-shadow .2s ease;
+}
+a:hover { opacity: .8; }
+
+/* Утиліти “скла” */
+.glass {
+  @apply bg-white/40 backdrop-blur-md border border-white/30;
+}
+.glass-soft {
+  @apply bg-white/50 backdrop-blur-md border border-white/20;
 }
