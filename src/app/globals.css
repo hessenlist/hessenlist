@@ -1,38 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ====== Base ====== */
-:root {
-  color-scheme: light;
-}
+:root { color-scheme: light; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   /* м’який скляний фон */
   background: linear-gradient(135deg, #f6f8f9 0%, #e9eef1 60%, #f4f6f8 100%);
   background-attachment: fixed;
-  @apply text-neutral-900;
+  color: #171717; /* текст по замовчуванню */
 }
 
 /* Типографія */
-h1, h2, h3 {
-  letter-spacing: -0.01em;
-}
+h1, h2, h3 { letter-spacing: -0.01em; }
 
 /* Лінки */
-a {
-  transition: color .2s ease, opacity .2s ease, box-shadow .2s ease;
-}
+a { transition: color .2s ease, opacity .2s ease, box-shadow .2s ease; }
 a:hover { opacity: .8; }
 
-/* Утиліти “скла” */
+/* “Liquid glass” утиліти (чистий CSS, без @apply — дружить із Tailwind v4) */
 .glass {
-  @apply bg-white/40 backdrop-blur-md border border-white/30;
+  background-color: rgba(255, 255, 255, 0.40);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.30);
 }
+
 .glass-soft {
-  @apply bg-white/50 backdrop-blur-md border border-white/20;
+  background-color: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
 }

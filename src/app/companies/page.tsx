@@ -1,4 +1,9 @@
 // src/app/companies/page.tsx
+export const metadata = {
+  title: "Unternehmen in Hessen · HessenList",
+  description:
+    "Durchsuche Unternehmen in Hessen. Der Activity Index zeigt, wer wirklich antwortet.",
+};
 import { supabase } from "@/lib/supabaseClient";
 import { computeActivityIndex } from "@/lib/activity";
 import CompaniesClient from "@/components/CompaniesClient";

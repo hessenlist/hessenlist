@@ -1,12 +1,25 @@
+// src/app/page.tsx
+export const metadata = {
+  title: "HessenList — Unternehmen, die wirklich antworten",
+  description:
+    "Finde Firmen in Hessen mit echtem Activity Index (Antwortgeschwindigkeit & Verlässlichkeit).",
+};
 import { supabase } from "@/lib/supabaseClient";
-import ActivityBadge from "@/components/ActivityBadge";
 import { computeActivityIndex } from "@/lib/activity";
 import Link from "next/link";
+import BrandDemo from "@/components/BrandDemo";
+import HomeTopCompanies from "@/components/HomeTopCompanies";
 
 type Company = {
-  id: string; slug: string; name: string; city: string | null;
-  answered: boolean | null; tta_hours: number | null; contactable: boolean | null;
-  activity_index: number | null; summary_de: string | null;
+  id: string;
+  slug: string;
+  name: string;
+  city: string | null;
+  answered: boolean | null;
+  tta_hours: number | null;
+  contactable: boolean | null;
+  activity_index: number | null;
+  summary_de: string | null;
 };
 
 export default async function HomePage() {
@@ -25,34 +38,47 @@ export default async function HomePage() {
 
   return (
     <section className="space-y-8">
-      <div className="pt-10">
-        <h1 className="text-5xl font-semibold tracking-tight">HessenList</h1>
-        <p className="text-neutral-700 text-lg mt-2">
+      {/* HERO з м’яким підсвічуванням */}
+      <div className="relative pt-10">
+        {/* soft light */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 h-56 w-[720px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(60% 60% at 50% 50%, rgba(255,255,255,.7) 0%, rgba(255,255,255,0) 70%)",
+            filter: "blur(20px)",
+          }}
+        />
+        <h1 className="relative text-5xl font-semibold tracking-tight">
+          HessenList
+        </h1>
+        <p className="relative text-neutral-700 text-lg mt-2">
           Finde Unternehmen, die wirklich antworten.
         </p>
-        <div className="pt-3">
+        <div className="relative pt-3">
           <Link className="underline text-sm" href="/companies">
             Alle Unternehmen ansehen →
           </Link>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((c) => (
-          <article key={c.id} className="glass rounded-2xl p-5 shadow-sm hover:shadow">
-            <div className="flex items-center justify-between">
-              <Link href={`/company/${c.slug}`} className="font-semibold truncate">
-                {c.name}
-              </Link>
-              <ActivityBadge score={c.score} />
-            </div>
-            <p className="text-sm text-neutral-700 mt-1">{c.city ?? "—"}</p>
-            <p className="text-sm text-neutral-600 mt-2 line-clamp-2">
-              {c.summary_de ?? "Beschreibung folgt"}
-            </p>
-          </article>
-        ))}
-      </div>
+      {/* Топ-3 компанії з анімацією */}
+      <HomeTopCompanies items={items} />
+
+      {/* CTA блок унизу */}
+      <section className="mt-12 glass rounded-2xl p-6 text-center">
+        <h2 className="text-xl font-semibold tracking-tight">Activity Index</h2>
+        <p className="text-neutral-700 mt-2">
+          Wie messen wir Antwortgeschwindigkeit und Verlässlichkeit?
+        </p>
+        <Link href="/about/activity-index" className="underline mt-3 inline-block">
+          Mehr erfahren →
+        </Link>
+      </section>
+
+      {/* Демо теми */}
+      <BrandDemo />
     </section>
   );
 }
