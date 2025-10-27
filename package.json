@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "codemap": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"tree /F /A > docs/CODEMAP.txt\""
+
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.75.1",

@@ -33,3 +33,7 @@ cp .env.example .env.local
 # Supabase-Schlüssel eintragen / fill in Supabase keys
 pnpm dev
 © 2025 HessenList. All rights reserved. / Alle Rechte vorbehalten.
+## Developer Index
+- [CODEMAP.txt](docs/CODEMAP.txt)
+- [SHORTCUTS.md](docs/SHORTCUTS.md)
+- [SNIPPETS.md](docs/SNIPPETS.md)
