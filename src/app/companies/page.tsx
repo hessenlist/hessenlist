@@ -4,9 +4,14 @@ export const metadata = {
   description:
     "Durchsuche Unternehmen in Hessen. Der Activity Index zeigt, wer wirklich antwortet.",
 };
+
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 import { supabase } from "@/lib/supabaseClient";
 import { computeActivityIndex } from "@/lib/activity";
 import CompaniesClient from "@/components/CompaniesClient";
+import ClientResetBoundary from "./ClientResetBoundary";
 
 type Company = {
   id: string;
@@ -25,7 +30,7 @@ type Company = {
 
 export default async function CompaniesPage() {
   const { data, error } = await supabase
-    .from("companies") // без <Company> — поки не генеримо типи з Supabase
+    .from("companies")
     .select("*")
     .order("name", { ascending: true });
 
@@ -33,7 +38,6 @@ export default async function CompaniesPage() {
 
   const rows = (data ?? []) as Company[];
 
-  // Підготуємо легку форму даних для клієнта
   const items = rows.map((c) => ({
     id: c.id,
     slug: c.slug,
@@ -46,9 +50,11 @@ export default async function CompaniesPage() {
   }));
 
   return (
-    <section className="space-y-4">
-      <h1 className="text-2xl font-semibold">Unternehmen</h1>
-      <CompaniesClient items={items} />
-    </section>
+    <ClientResetBoundary>
+      <section className="space-y-4">
+        <h1 className="text-2xl font-semibold">Unternehmen</h1>
+        <CompaniesClient items={items} />
+      </section>
+    </ClientResetBoundary>
   );
 }

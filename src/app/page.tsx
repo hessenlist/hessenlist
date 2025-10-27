@@ -1,14 +1,19 @@
 // src/app/page.tsx
+import Link from "next/link";
+import { supabase } from "@/lib/supabaseClient";
+import { computeActivityIndex } from "@/lib/activity";
+import HomeTopCompanies from "@/components/HomeTopCompanies";
+import BrandDemo from "@/components/BrandDemo";
+
 export const metadata = {
   title: "HessenList — Unternehmen, die wirklich antworten",
   description:
     "Finde Firmen in Hessen mit echtem Activity Index (Antwortgeschwindigkeit & Verlässlichkeit).",
 };
-import { supabase } from "@/lib/supabaseClient";
-import { computeActivityIndex } from "@/lib/activity";
-import Link from "next/link";
-import BrandDemo from "@/components/BrandDemo";
-import HomeTopCompanies from "@/components/HomeTopCompanies";
+
+// стабільність рендеру між маршрутами
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 type Company = {
   id: string;
@@ -28,7 +33,11 @@ export default async function HomePage() {
 
   const items = rows
     .map((c) => ({
-      ...c,
+      id: c.id,
+      slug: c.slug,
+      name: c.name,
+      city: c.city,
+      summary_de: c.summary_de,
       score:
         c.activity_index ??
         computeActivityIndex(!!c.answered, c.tta_hours, !!c.contactable),
@@ -38,9 +47,8 @@ export default async function HomePage() {
 
   return (
     <section className="space-y-8">
-      {/* HERO з м’яким підсвічуванням */}
+      {/* HERO */}
       <div className="relative pt-10">
-        {/* soft light */}
         <div
           aria-hidden
           className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 h-56 w-[720px] rounded-full"
@@ -50,10 +58,10 @@ export default async function HomePage() {
             filter: "blur(20px)",
           }}
         />
-        <h1 className="relative text-5xl font-semibold tracking-tight">
+        <h1 className="relative text-3xl sm:text-5xl font-semibold tracking-tight">
           HessenList
         </h1>
-        <p className="relative text-neutral-700 text-lg mt-2">
+        <p className="relative text-neutral-700 text-base sm:text-lg mt-2">
           Finde Unternehmen, die wirklich antworten.
         </p>
         <div className="relative pt-3">
@@ -63,10 +71,10 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Топ-3 компанії з анімацією */}
+      {/* Топ-3 компанії */}
       <HomeTopCompanies items={items} />
 
-      {/* CTA блок унизу */}
+      {/* CTA */}
       <section className="mt-12 glass rounded-2xl p-6 text-center">
         <h2 className="text-xl font-semibold tracking-tight">Activity Index</h2>
         <p className="text-neutral-700 mt-2">
@@ -77,7 +85,6 @@ export default async function HomePage() {
         </Link>
       </section>
 
-      {/* Демо теми */}
       <BrandDemo />
     </section>
   );

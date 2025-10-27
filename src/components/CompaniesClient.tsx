@@ -1,7 +1,13 @@
 // src/components/CompaniesClient.tsx
 "use client";
 
-import { useMemo, useState, useDeferredValue, useCallback } from "react";
+import {
+  useMemo,
+  useState,
+  useDeferredValue,
+  useCallback,
+} from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ActivityBadge from "@/components/ActivityBadge";
@@ -15,22 +21,21 @@ type CompanyItem = {
   score: number | null;
 };
 
-/** Нормалізуємо рядок: нижній регістр, без діакритик, стискаємо пробіли */
 function normalize(s: string) {
   return s
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/\p{Diacritic}/gu, "") // ä→a, ö→o, ß→ss (частково)
-    .replace(/\u00A0/g, " ")        // NBSP → звичайний пробіл
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/\u00A0/g, " ")
     .replace(/\s+/gu, " ")
     .trim();
 }
 
 export default function CompaniesClient({ items }: { items: CompanyItem[] }) {
+  const pathname = usePathname();
   const [q, setQ] = useState("");
   const deferredQ = useDeferredValue(q);
 
-  // Підготовлений “індекс” для пошуку
   const indexed = useMemo(
     () =>
       items.map((c) => ({
@@ -43,22 +48,19 @@ export default function CompaniesClient({ items }: { items: CompanyItem[] }) {
   );
 
   const handleText = useCallback((v: string) => {
-    // страхуємося від невидимих символів
     setQ(v.replace(/\u00A0/g, " "));
   }, []);
-
   const clear = useCallback(() => setQ(""), []);
 
-  // Фільтрація з урахуванням нормалізації.
   const filtered = useMemo(() => {
     const s = normalize(deferredQ);
-    if (s.length === 0) return items; // гарантуємо повернення всіх
+    if (s.length === 0) return items;
     return indexed.filter((c) => c._haystack.includes(s));
   }, [deferredQ, indexed, items]);
 
   return (
-    <div className="space-y-4">
-      {/* Пошукове поле + власна кнопка очищення + Esc */}
+    <div key={pathname} className="space-y-4">
+      {/* Пошук */}
       <div className="relative w-full max-w-md">
         <input
           type="text"
@@ -86,7 +88,7 @@ export default function CompaniesClient({ items }: { items: CompanyItem[] }) {
         )}
       </div>
 
-      {/* container with stagger */}
+      {/* Grid з анімаціями */}
       <motion.div
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         initial="hidden"
@@ -116,7 +118,7 @@ export default function CompaniesClient({ items }: { items: CompanyItem[] }) {
         ))}
       </motion.div>
 
-      {/* Порожній стан лише коли є запит і 0 збігів */}
+      {/* Empty state */}
       {filtered.length === 0 && normalize(q).length > 0 && (
         <div className="mt-6 text-sm text-neutral-600 glass rounded-2xl p-6 text-center">
           <div className="mb-2">Keine Ergebnisse gefunden.</div>

@@ -1,10 +1,11 @@
+// src/components/HomeTopCompanies.tsx
 "use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ActivityBadge from "@/components/ActivityBadge";
 
-type Item = {
+export type HomeCompany = {
   id: string;
   slug: string;
   name: string;
@@ -13,16 +14,13 @@ type Item = {
   score: number | null;
 };
 
-export default function HomeTopCompanies({ items }: { items: Item[] }) {
+export default function HomeTopCompanies({ items }: { items: HomeCompany[] }) {
   return (
     <motion.div
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       initial="hidden"
       animate="show"
-      variants={{
-        hidden: {},
-        show: { transition: { staggerChildren: 0.08 } },
-      }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
     >
       {items.map((c) => (
         <motion.article
